@@ -8,4 +8,9 @@ setup(
     packages = find_packages(where = "robomaster_lib"),
     package_dir = {"": "robomaster_lib"},
     python_requires = ">=3.7",
+    install_requires = [
+        "netifaces>=0.11.0",
+        "netaddr>=1.3.0",
+        "av>=15.1.0"
+    ]
 )

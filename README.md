@@ -14,10 +14,10 @@ Rewrite the `robomaster` library to make it compatible with the later version of
 ---
 
 ### Robomaster-SDK-Ultra Usage:
-1. run `git clone git@github.com:RamessesN/Robomaster-SDK-Ultra.git` to download
-2. set `lib` files to `Sources Root` to make it can be found globally
+1. `git clone git@github.com:RamessesN/Robomaster-SDK-Ultra.git`
+2. `cd Robomaster-SDK-Ultra` and then `pip install -e .`
 3. start your `xxx.py` with `from robomaster_ultra import xxx`
-4. Details of the api Usage: See [robomaster documentaton](https://robomaster-dev.readthedocs.io/zh-cn/latest/index.html)
+4. details of the api usage: See [robomaster documentaton](https://robomaster-dev.readthedocs.io/zh-cn/latest/index.html)
 
 ---
 
