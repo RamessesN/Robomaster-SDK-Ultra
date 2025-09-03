@@ -3,8 +3,13 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# C extensions
-*.so
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
 # Distribution / packaging
 .Python
@@ -14,26 +19,28 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
 *.egg-info/
-.installed.cfg
 *.egg
 MANIFEST
+wheels/
+parts/
+sdist/
+share/python-wheels/
+.installed.cfg
+
+# C extensions
+*.so
 
 # PyInstaller
 *.manifest
 *.spec
 
-# Installer logs
+# Logs
+*.log
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
+# Test / coverage
 htmlcov/
 .tox/
 .nox/
@@ -48,30 +55,6 @@ coverage.xml
 .pytest_cache/
 cover/
 
-# Translations
-*.mo
-*.pot
-
-# Django stuff
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask stuff
-instance/
-.webassets-cache
-
-# Scrapy stuff
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-.pybuilder/
-target/
-
 # Jupyter Notebook
 .ipynb_checkpoints
 
@@ -79,55 +62,33 @@ target/
 profile_default/
 ipython_config.py
 
-# pyenv
+# Pyenv
 .python-version
 
 # pipenv
 Pipfile.lock
 
-# UV
-uv.lock
-
-# poetry
+# Poetry
 poetry.lock
 poetry.toml
-.pdm-python
+
+# pdm
 .pdm-build/
+pdm.lock
+pdm.toml
+.pdm-python
 
-# pixi
-.pixi
-
-# PEP 582
+# Virtual packages
 __pypackages__/
 
-# Celery
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath
-*.sage.py
-
-# Environments
-.env
-.envrc
-.venv/
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# IDEs
-.spyderproject
-.spyproject
+# Editor
 .idea/
 .vscode/
+.spyderproject
+.spyproject
 
-# Ruff
-.ruff_cache/
-
-# PyPI config
-.pypirc
+# OS files
+.DS_Store
 
 # Cursor
 .cursorignore
@@ -138,11 +99,10 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-# macOS
-.DS_Store
-
-# ---------------- Libraries ----------------
+# ---------------- Library ----------------
 # 忽略 lib 下的其他内容，但保留 robomaster 库
-lib/
+lib/*
 !lib/robomaster_ultra/
+!lib/robomaster_ultra/**
 !lib/multi_robomaster_ultra/
+!lib/multi_robomaster_ultra/**
