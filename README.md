@@ -9,7 +9,7 @@ Rewrite the `robomaster` library to make it compatible with the later version of
 
 ### Notice:
 - `media` module has been overwritten by `PyAV`, which is used to encode `H264` video
-- `python-version`: between `3.6.5` and `3.11.0`
+- `python-version`: ( `3.6.6`, `3.11.0` )
 
 ---
 
@@ -22,7 +22,7 @@ Rewrite the `robomaster` library to make it compatible with the later version of
 ---
 
 ### TODO:
-1. fix `audioop` deprecation in python3.11 from [`camera.py`](./lib/robomaster_ultra/camera.py)
+1. fix `audioop` deprecation in python3.11 from [`camera.py`](robomaster_lib/robomaster_ultra/camera.py)
    > See [audioop](https://docs.python.org/3/library/audioop.html)
 2. fix audio loss caused by transfer from `libmedia_codec` to `pyav`
 
