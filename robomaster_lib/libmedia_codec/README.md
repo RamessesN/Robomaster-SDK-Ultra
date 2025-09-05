@@ -13,12 +13,12 @@ CMake project structure.
 **On Unix (Linux, OS X)**
 
 * A compiler with C++11 support
-* CMake >= 2.8.12
+* CMake >= 3.5
 
 **On Windows**
 
 * Visual Studio 2015 (required for all Python versions, see notes below)
-* CMake >= 3.1
+* CMake >= 3.5
 
 
 ## Installation
@@ -69,15 +69,3 @@ formats please refer to the Sphinx manual:
 Pybind11 is provided under a BSD-style license that can be found in the LICENSE
 file. By using, distributing, or contributing to this project, you agree to the
 terms and conditions of this license.
-
-
-## Test call
-
-```python
-import cmake_example
-cmake_example.add(1, 2)
-```
-
-
-[FAQ]: http://pybind11.rtfd.io/en/latest/faq.html#working-with-ancient-visual-studio-2009-builds-on-windows
-[vs2015_runtime]: https://www.microsoft.com/en-us/download/details.aspx?id=48145
