@@ -11,6 +11,7 @@ setup(
     install_requires = [
         "netifaces>=0.11.0",
         "netaddr>=1.3.0",
-        "av>=15.1.0"
+        "av>=15.1.0",
+        "scipy>=1.15.0"
     ]
 )
