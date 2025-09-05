@@ -2,7 +2,7 @@ from . import conn
 from . import logger
 import threading
 import queue
-import libmedia_codec
+import libmedia_codec_ultra
 import numpy
 import cv2
 import time
@@ -13,7 +13,7 @@ class LiveView(object):
     def __init__(self, robot):
         self._robot = robot
         self._video_stream_conn = conn.StreamConnection()
-        self._video_decoder = libmedia_codec.H264Decoder()
+        self._video_decoder = libmedia_codec_ultra.H264Decoder()
         # disable logging
         self._video_decoder_thread = None
         self._video_display_thread = None
@@ -23,7 +23,7 @@ class LiveView(object):
         self._video_frame_count = 0
 
         self._audio_stream_conn = conn.StreamConnection()
-        self._audio_decoder = libmedia_codec.OpusDecoder()
+        self._audio_decoder = libmedia_codec_ultra.OpusDecoder()
         self._audio_decoder_thread = None
         self._audio_playing_thread = None
         self._audio_frame_queue = queue.Queue(32)
