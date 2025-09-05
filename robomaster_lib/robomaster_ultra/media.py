@@ -1,34 +1,34 @@
-# Video Stream Configuration
-
 from . import conn
 from . import logger
 import threading
 import queue
+import libmedia_codec
+import numpy
 import cv2
-
-# PyAV 用于 H264 解码
-import av
+import time
 
 
 class LiveView(object):
 
     def __init__(self, robot):
         self._robot = robot
-
-        # 视频流相关
         self._video_stream_conn = conn.StreamConnection()
-        self._video_frame_queue = queue.Queue(64)
+        self._video_decoder = libmedia_codec.H264Decoder()
+        # disable logging
         self._video_decoder_thread = None
         self._video_display_thread = None
+        self._video_frame_queue = queue.Queue(64)
         self._video_streaming = False
         self._displaying = False
         self._video_frame_count = 0
 
-        # 音频流相关（暂不实现）
         self._audio_stream_conn = conn.StreamConnection()
-        self._audio_frame_queue = queue.Queue(32)
+        self._audio_decoder = libmedia_codec.OpusDecoder()
         self._audio_decoder_thread = None
+        self._audio_playing_thread = None
+        self._audio_frame_queue = queue.Queue(32)
         self._audio_streaming = False
+        self._playing = False
         self._audio_frame_count = 0
 
     def __del__(self):
@@ -40,24 +40,19 @@ class LiveView(object):
         if self._audio_streaming:
             self.stop_audio_stream()
 
-    # ---------------- 视频部分 ---------------- #
     def start_video_stream(self, display=True, addr=None, ip_proto="tcp"):
         try:
-            logger.info(f"Liveview: connecting to video addr {addr}, proto={ip_proto}")
+            logger.info("Liveview: try to connect addr {0}, proto={1}".format(
+                addr, ip_proto))
             self._video_stream_conn.connect(addr, ip_proto)
             self._video_streaming = True
-
-            # 解码线程
             self._video_decoder_thread = threading.Thread(target=self._video_decoder_task)
             self._video_decoder_thread.start()
-
-            # 显示线程
             if display:
                 self._video_display_thread = threading.Thread(target=self._video_display_task)
                 self._video_display_thread.start()
-
         except Exception as e:
-            logger.error(f"Liveview: start_video_stream exception {e}")
+            logger.error("Liveview: start_video_stream, exception {0}".format(e))
             return False
         return True
 
@@ -65,86 +60,135 @@ class LiveView(object):
         try:
             self._video_streaming = False
             self._displaying = False
-
             if self._video_stream_conn:
                 self._video_stream_conn.disconnect()
-
-            # 等待线程结束
-            if self._video_display_thread:
-                self._video_frame_queue.put(None)
-                self._video_display_thread.join()
+            if self._displaying:
+                if self._video_display_thread:
+                    self._video_frame_queue.put(None)
+                    self._video_display_thread.join()
             if self._video_decoder_thread:
                 self._video_decoder_thread.join()
-
-            # 清空队列
-            while not self._video_frame_queue.empty():
-                self._video_frame_queue.get_nowait()
-
+            self._video_frame_queue.queue.clear()
         except Exception as e:
-            logger.error(f"LiveView: stop_video_stream exception {e}")
+            logger.error("LiveView: disconnect exception {0}".format(e))
             return False
-
-        logger.info("LiveView: stop_video_stream finished")
+        logger.info("LiveView: stop_video_stream stopped.")
         return True
 
     def read_video_frame(self, timeout=3, strategy="pipeline"):
-        try:
-            if strategy == "pipeline":
-                return self._video_frame_queue.get(timeout=timeout)
-            elif strategy == "newest":
-                while self._video_frame_queue.qsize() > 1:
-                    self._video_frame_queue.get(timeout=timeout)
-                return self._video_frame_queue.get(timeout=timeout)
-            else:
-                logger.warning(f"LiveView: read_video_frame unsupported strategy {strategy}")
-                return None
-        except queue.Empty:
+        if strategy == "pipeline":
+            return self._video_frame_queue.get(timeout=timeout)
+        elif strategy == "newest":
+            while self._video_frame_queue.qsize() > 1:
+                self._video_frame_queue.get(timeout=timeout)
+            return self._video_frame_queue.get(timeout=timeout)
+        else:
+            logger.warning("LiveView: read_video_frame, unsupported strategy:{0}".format(strategy))
             return None
+
+    def _h264_decode(self, data):
+        res_frame_list = []
+        frames = self._video_decoder.decode(data)
+        for frame_data in frames:
+            (frame, width, height, ls) = frame_data
+            if frame:
+                frame = numpy.fromstring(frame, dtype=numpy.ubyte, count=len(frame), sep='')
+                frame = (frame.reshape((height, width, 3)))
+                res_frame_list.append(frame)
+        return res_frame_list
 
     def _video_decoder_task(self):
         self._video_streaming = True
-        logger.info("LiveView: _video_decoder_task started")
-
-        # 用 PyAV 打开网络流
-        container = av.open(self._video_stream_conn.get_stream_fd(), format='h264', mode='r')
-
-        for packet in container.demux(video=0):
+        logger.info("Liveview: _video_decoder_task, started!")
+        while self._video_streaming:
+            data = b''
+            # 获取一帧h264 数据
+            buf = self._video_stream_conn.read_buf()
             if not self._video_streaming:
                 break
-            for frame in packet.decode():
-                img = frame.to_ndarray(format='bgr24')
-                try:
-                    self._video_frame_count += 1
-                    if self._video_frame_count % 30 == 1:
-                        logger.info(f"LiveView: decoded video frame {self._video_frame_count}")
-                    self._video_frame_queue.put(img, timeout=2)
-                except queue.Full:
-                    logger.warning("LiveView: video frame queue full, dropping frame")
-                    continue
-
-        logger.info("LiveView: _video_decoder_task quit")
+            if buf:
+                data += buf
+                frames = self._h264_decode(data)
+                for frame in frames:
+                    try:
+                        self._video_frame_count += 1
+                        if self._video_frame_count % 30 == 1:
+                            logger.info("LiveView: video_decoder_task, get frame {0}.".format(self._video_frame_count))
+                        self._video_frame_queue.put(frame, timeout=2)
+                    except Exception as e:
+                        logger.warning("LiveView: _video_decoder_task, decoder queue is full, e {}.".format(e))
+                        continue
+        logger.info("LiveView: _video_decoder_task, quit.")
 
     def _video_display_task(self, name="RoboMaster LiveView"):
         self._displaying = True
-        logger.info("LiveView: _video_display_task started")
-
-        while self._displaying and self._video_streaming:
-            frame = self._video_frame_queue.get()
-            if frame is None:
-                break
-            cv2.imshow(name, frame)
+        logger.info("Liveview: _video_display_task, started!")
+        while self._displaying & self._video_streaming:
+            try:
+                frame = self._video_frame_queue.get()
+                if frame is None:
+                    logger.warning("LiveView: _video_display_task, get frame None.")
+                    if not self._displaying:
+                        break
+            except Exception as e:
+                logger.warning("LiveView: display_task, video_frame_queue is empty, e {0}".format(e))
+                continue
+            img = numpy.array(frame)
+            cv2.imshow(name, img)
             cv2.waitKey(1)
-
-        logger.info("LiveView: _video_display_task quit")
-
-    # ---------------- 音频部分（占位） ---------------- #
-    def start_audio_stream(self, addr=None, ip_proto="tcp"):
-        logger.warning("LiveView: audio stream not implemented yet")
-        return False
-
-    def stop_audio_stream(self):
-        self._audio_streaming = False
-        return True
+        logger.info("LiveView: _video_display_task, quit.")
 
     def read_audio_frame(self, timeout=1):
-        return None
+        return self._audio_frame_queue.get(timeout=timeout)
+
+    def start_audio_stream(self, addr=None, ip_proto="tcp"):
+        try:
+            logger.info("LiveView: try to connect addr:{0}, ip_proto:{1}".format(
+                addr, ip_proto))
+            self._audio_stream_conn.connect(addr, ip_proto)
+            self._audio_decoder_thread = threading.Thread(
+                target=self._audio_decoder_task)
+            self._audio_decoder_thread.start()
+        except Exception as e:
+            logger.error("LiveView: start_audio_stream, exception {0}".format(e))
+            return False
+        return True
+
+    def stop_audio_stream(self):
+        try:
+            logger.info("LiveView: stop_audio_stream stopping...")
+            self._audio_streaming = False
+            if self._audio_decoder_thread:
+                self._audio_decoder_thread.join()
+            self._audio_stream_conn.disconnect()
+            self._video_frame_queue.queue.clear()
+            # make sure the robot is disconnected
+            time.sleep(0.5)
+        except Exception as e:
+            logger.error("LiveView: disconnect exception {0}".format(e))
+            return False
+        logger.info("LiveView: stop_video_stream stopped.")
+        return True
+
+    def _audio_decoder_task(self):
+        self._audio_streaming = True
+        while self._audio_streaming:
+            data = b''
+
+            buf = self._audio_stream_conn.read_buf()
+            if buf:
+                data += buf
+
+                if len(data) != 0:
+                    frame = self._audio_decoder.decode(data)
+                    if frame:
+                        try:
+                            self._audio_frame_count += 1
+                            logger.info("LiveView: audio_decoder_task, get frame {0}.".format(self._audio_frame_count))
+                            self._audio_frame_queue.put(frame, timeout=1)
+                        except Exception as e:
+                            if not self._audio_streaming:
+                                break
+                            logger.warning("LiveView: _audio_decoder_task, audio_frame_queue full, e {0}!".format(e))
+                            continue
+        logger.info("LiveView: _audio_decoder_task, quit.")

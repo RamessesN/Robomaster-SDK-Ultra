@@ -1,5 +1,3 @@
-# Camera configuration
-
 import numpy
 import audioop
 import wave
