@@ -1,5 +1,4 @@
 import numpy
-import audioop
 import wave
 import time
 from . import module
@@ -7,6 +6,9 @@ from . import conn
 from . import protocol
 from . import logger
 from . import media
+
+from scipy.signal import resample
+import numpy as np
 
 
 __all__ = ['Camera', 'EPCamera', 'TelloCamera', 'STREAM_360P', 'STREAM_540P', 'STREAM_720P']
@@ -357,8 +359,11 @@ class EPCamera(module.Module, Camera):
 
             if sample_rate != 48000:
                 data = b''.join(frames)
-                converted = audioop.ratecv(data, 2, 1, 48000, sample_rate, None)
-                wf.writeframes(converted[0])
+                data_np = np.frombuffer(data, dtype=np.int16)  # bytes -> int16 numpy array
+                num_samples = int(len(data_np) * sample_rate / 48000)
+                resampled_np = resample(data_np, num_samples)  # 重采样
+                resampled_bytes = resampled_np.astype(np.int16).tobytes()  # 转回 bytes
+                wf.writeframes(resampled_bytes)
             wf.close()
         except Exception as e:
             logger.error("Camera: record_audio, exception {0}".format(e))
