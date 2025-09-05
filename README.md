@@ -3,30 +3,34 @@
 ---
 
 ### Description: 
-Rewrite the `robomaster` library to make it compatible with the later version of Python.
+Rewrite the **robomaster** library to make it compatible with the later version of Python
 
 ---
 
 ### Notice:
-- It includes `libmedia_codec` for media decoding/encoding support (H264/Opus).
-- `python-version`: `3.7` ~ `3.11`
+- It includes `libmedia_codec` for media decoding / encoding support (H264 / Opus).
+- Python Compatibility: `3.7` ~ `3.10`
 
 ---
 
 ### Robomaster-SDK-Ultra Usage:
-1. `git clone git@github.com:RamessesN/Robomaster-SDK-Ultra.git`
-2. The SDK depends on `ffmpeg` and `opus` libraries. Install them via `homebrew` or system package manager
+1. clone to local
+2. **robomaster-sdk-ultra** depends on `ffmpeg` and `opus` libraries. Install them via `homebrew` or system package manager
     - macOS (Apple Silicon / Intel): `brew install ffmpeg@4 opus`
     - Linux (Ubuntu / Debian): `sudo apt update; sudo apt install ffmpeg libopus-dev`
-3. `cd Robomaster-SDK-Ultra` and then `pip install -e .`
-4. start your `xxx.py` with `from robomaster_ultra import xxx`
-5. details of the api usage: See [robomaster documentaton](https://robomaster-dev.readthedocs.io/zh-cn/latest/index.html)
+3. install **robomaster sdk ultra** library:
+   - `cd Robomaster-SDK-Ultra`
+   - `pip install -e .`
+4. install **media decoder** dependency: 
+   - `cd robomaster_lib/libmedia_codec_ultra`
+   - `pip install -e .`
+5. start your `xxx.py` with `from robomaster_ultra import xxx`
+6. details of the api usage: Reference - [robomaster documentaton](https://robomaster-dev.readthedocs.io/zh-cn/latest/index.html)
 
 ---
 
 ### TODO:
-1. fix `audioop` deprecation in python3.11 from [`camera.py`](robomaster_lib/robomaster_ultra/camera.py)
-   - Reference [audioop](https://docs.python.org/3/library/audioop.html)
+1. ...
 
 ---
 
@@ -35,4 +39,4 @@ Rewrite the `robomaster` library to make it compatible with the later version of
 ---
 
 #### @ author: [RamessesN](https://github.com/RamessesN)
-#### @ date: 2025-09-05
+#### @ date: 2025-09-06
