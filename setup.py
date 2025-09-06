@@ -10,7 +10,7 @@ setup(
     python_requires = ">=3.7",
     install_requires = [
         "netifaces>=0.11.0",
-        "netaddr>=1.3.0"
+        "netaddr>=1.3.0",
         "scipy>=1.15.0"
     ]
 )
