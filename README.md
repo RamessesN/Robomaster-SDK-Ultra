@@ -13,7 +13,21 @@ Rewrite the **robomaster** library to make it compatible with the later version 
 
 ---
 
-### Robomaster-SDK-Ultra Usage:
+### Robomaster-SDK-Ultra Installation:
+
+<details open>
+<summary> install by automator-script </summary>
+
+1. clone to local
+2. `cd Robomaster-SDK-Ultra`
+3. `sudo chmod 755 ./installer.sh`
+4. `./installer.sh`
+
+</details>
+
+<details>
+<summary> Manual Installation </summary>
+
 1. clone to local
 2. **robomaster-sdk-ultra** depends on `ffmpeg` and `opus` libraries. Install them via `homebrew` or system package manager
     - macOS (Apple Silicon / Intel): `brew install ffmpeg@4 opus`
@@ -27,13 +41,15 @@ Rewrite the **robomaster** library to make it compatible with the later version 
 5. install **pybind11** dependency:
    - `cd pybind11`
    - `pip install -e .`
-6. start your `xxx.py` with `from robomaster_ultra import xxx`
-7. details of the api usage: Reference - [robomaster documentaton](https://robomaster-dev.readthedocs.io/zh-cn/latest/index.html)
+
+</details>
 
 ---
 
-### TODO:
-1. ...
+### Test Installation:
+
+1. start your `xxx.py` with `from robomaster_ultra import xxx`
+2. details of the api-usage: Reference - [robomaster documentaton](https://robomaster-dev.readthedocs.io/zh-cn/latest/index.html)
 
 ---
 
