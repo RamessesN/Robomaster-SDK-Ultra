@@ -1,6 +1,6 @@
 import sys
-if sys.version_info < (3, 6, 5) or sys.version_info >= (3, 11, 0):
-    sys.exit('RoboMaster-SDK-Ultra requires Python 3.6.5 to Python 3.11.0')
+if sys.version_info < (3, 6, 5):
+    sys.exit('RoboMaster-SDK-Ultra requires at least Python 3.6.5')
 
 import logging
 import time

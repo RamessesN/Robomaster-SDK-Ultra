@@ -1,3 +1,5 @@
+# Video Stream Config
+
 import numpy
 import wave
 import time
