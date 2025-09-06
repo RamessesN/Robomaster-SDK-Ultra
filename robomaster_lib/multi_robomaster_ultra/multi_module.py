@@ -1,9 +1,9 @@
 import copy
 import time
 import threading
-from ..robomaster import action
-from ..robomaster import flight
-from ..robomaster import led
+from ..robomaster_ultra import action
+from ..robomaster_ultra import flight
+from ..robomaster_ultra import led
 from . import logger
 from . import tool
 

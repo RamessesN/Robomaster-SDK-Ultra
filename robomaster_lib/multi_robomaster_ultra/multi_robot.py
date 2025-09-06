@@ -2,11 +2,11 @@ import sys
 import time
 import random
 import threading
-from ..robomaster import protocol
-from ..robomaster import conn
-from ..robomaster import robot
-from ..robomaster import client
-from ..robomaster import config
+from ..robomaster_ultra import protocol
+from ..robomaster_ultra import conn
+from ..robomaster_ultra import robot
+from ..robomaster_ultra import client
+from ..robomaster_ultra import config
 from . import logger
 from . import tool
 from . import multi_group

@@ -7,8 +7,8 @@ import socket
 import queue
 import threading
 from . import logger
-from ..robomaster import conn
-from ..robomaster import config
+from ..robomaster_ultra import conn
+from ..robomaster_ultra import config
 
 
 def get_func_name():
