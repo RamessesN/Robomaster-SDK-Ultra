@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project (robomaster_media_codec)
+project (robomaster_media_codec_ultra)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_BUILD_TYPE Release)
 SET(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/output)
@@ -14,13 +14,13 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
 	SET(OPUS_LIBRARIES "${CMAKE_SOURCE_DIR}/src/opus-share/lib/opus.lib")
 	SET(FFMEPG_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/src/ffmpeg-4.2.2-win64-dev/include")
 	SET(FFMEPG_LIBRARIES_PATH "${CMAKE_SOURCE_DIR}/src/ffmpeg-4.2.2-win64-dev/lib")
-	target_link_libraries(libmedia_codec PRIVATE
+	target_link_libraries(libmedia_codec_ultra PRIVATE
 			${FFMEPG_LIBRARIES_PATH}/avcodec.lib
 			${FFMEPG_LIBRARIES_PATH}/swscale.lib
 			${FFMEPG_LIBRARIES_PATH}/avutil.lib
 			${OPUS_LIBRARIES})
-	target_include_directories(libmedia_codec PRIVATE 
-			${FFMEPG_INCLUDE_DIRS} 
+	target_include_directories(libmedia_codec_ultra PRIVATE
+			${FFMEPG_INCLUDE_DIRS}
 			${OPUS_INCLUDE_DIRS})
 
 ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Darwin")  # macOS
@@ -36,8 +36,8 @@ ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Darwin")  # macOS
     set(OPUS_INCLUDE_DIRS "/opt/homebrew/include")
     set(OPUS_LIBRARIES "/opt/homebrew/lib/libopus.dylib")
 
-    target_include_directories(libmedia_codec PRIVATE ${FFMPEG_INCLUDE_DIRS} ${OPUS_INCLUDE_DIRS})
-    target_link_libraries(libmedia_codec PRIVATE ${FFMPEG_LIBRARIES} ${OPUS_LIBRARIES})
+    target_include_directories(libmedia_codec_ultra PRIVATE ${FFMPEG_INCLUDE_DIRS} ${OPUS_INCLUDE_DIRS})
+    target_link_libraries(libmedia_codec_ultra PRIVATE ${FFMPEG_LIBRARIES} ${OPUS_LIBRARIES})
 
 ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Linux")   # Jetson / Ubuntu
     # Ubuntu 默认路径
@@ -50,6 +50,6 @@ ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Linux")   # Jetson / Ubuntu
     set(OPUS_INCLUDE_DIRS "/usr/include/opus")
     set(OPUS_LIBRARIES "/usr/lib/aarch64-linux-gnu/libopus.so")
 
-    target_include_directories(libmedia_codec PRIVATE ${FFMPEG_INCLUDE_DIRS} ${OPUS_INCLUDE_DIRS})
-    target_link_libraries(libmedia_codec PRIVATE ${FFMPEG_LIBRARIES} ${OPUS_LIBRARIES})
+    target_include_directories(libmedia_codec_ultra PRIVATE ${FFMPEG_INCLUDE_DIRS} ${OPUS_INCLUDE_DIRS})
+    target_link_libraries(libmedia_codec_ultra PRIVATE ${FFMPEG_LIBRARIES} ${OPUS_LIBRARIES})
 ENDIF()

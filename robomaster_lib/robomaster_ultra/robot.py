@@ -1101,14 +1101,10 @@ class Robot(RobotBase):
         self._audio_id = 0
 
     def __del__(self):
-        self.close()
-
-        if self is None:
-            return
-
-        for name in list(self._modules.keys()):
-            if self._modules[name]:
-                del self._modules[name]
+        try:
+            self.close()
+        except Exception:
+            pass
 
     def _start_heart_beat_timer(self):
         if self._running:
@@ -1319,19 +1315,56 @@ class Robot(RobotBase):
         return True
 
     def close(self):
-        self._ftp.stop()
-        if self._initialized:
-            self._enable_sdk(0)
-            self._stop_heart_beat_timer()
-        for name in list(self._modules.keys()):
-            if self._modules[name]:
-                self._modules[name].stop()
-        if self.client:
-            self._client.stop()
-        if self._sdk_conn:
-            self._sdk_conn.close()
-        self._initialized = False
-        logger.info("Robot close")
+        # 避免重复关闭
+        if getattr(self, "_closed", False):
+            return
+        self._closed = True
+
+        try:
+            if hasattr(self, "_ftp") and self._ftp:
+                try:
+                    self._ftp.stop()
+                except Exception:
+                    pass
+
+            if getattr(self, "_initialized", False):
+                try:
+                    self._enable_sdk(0)
+                except Exception:
+                    pass
+                try:
+                    self._stop_heart_beat_timer()
+                except Exception:
+                    pass
+
+            if hasattr(self, "_modules"):
+                for name, module in list(self._modules.items()):
+                    try:
+                        if module:
+                            module.stop()
+                    except Exception:
+                        pass
+                self._modules.clear()
+
+            if hasattr(self, "_client") and self._client:
+                try:
+                    self._client.stop()
+                except Exception:
+                    pass
+
+            if hasattr(self, "_sdk_conn") and self._sdk_conn:
+                try:
+                    self._sdk_conn.close()
+                except Exception:
+                    pass
+
+            self._initialized = False
+            try:
+                logger.info("Robot close")
+            except Exception:
+                pass
+        except Exception:
+            pass
 
     def _wait_for_connection(self, conn_type, proto_type, sn=None):
         result, local_addr, remote_addr = self._sdk_conn.request_connection(self._sdk_host, conn_type, proto_type, sn)
