@@ -9,7 +9,7 @@ Rewrite the **robomaster** library to make it compatible with the later version 
 
 ### Notice:
 - It includes `libmedia_codec` for media decoding / encoding support (H264 / Opus).
-- Python Compatibility: `3.7` ~ `3.10`
+- Python Compatibility: `3.7` ~ `3.13`
 
 ---
 
@@ -24,8 +24,11 @@ Rewrite the **robomaster** library to make it compatible with the later version 
 4. install **media decoder** dependency: 
    - `cd robomaster_lib/libmedia_codec_ultra`
    - `pip install -e .`
-5. start your `xxx.py` with `from robomaster_ultra import xxx`
-6. details of the api usage: Reference - [robomaster documentaton](https://robomaster-dev.readthedocs.io/zh-cn/latest/index.html)
+5. install **pybind11** dependency:
+   - `cd pybind11`
+   - `pip install -e .`
+6. start your `xxx.py` with `from robomaster_ultra import xxx`
+7. details of the api usage: Reference - [robomaster documentaton](https://robomaster-dev.readthedocs.io/zh-cn/latest/index.html)
 
 ---
 
