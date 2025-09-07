@@ -12,8 +12,8 @@ pybind11_add_module(libmedia_codec_ultra src/media_codec.cpp)
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
 	SET(OPUS_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/src/opus-share/include")
 	SET(OPUS_LIBRARIES "${CMAKE_SOURCE_DIR}/src/opus-share/lib/opus.lib")
-	SET(FFMPEG_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/src/ffmpeg-4.2.2-win64-dev/include")
-	SET(FFMPEG_LIBRARIES_PATH "${CMAKE_SOURCE_DIR}/src/ffmpeg-4.2.2-win64-dev/lib")
+	SET(FFMPEG_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/src/ffmpeg-win64/include")
+	SET(FFMPEG_LIBRARIES_PATH "${CMAKE_SOURCE_DIR}/src/ffmpeg-win64/lib")
 	target_link_libraries(libmedia_codec_ultra PRIVATE
 			${FFMPEG_LIBRARIES_PATH}/avcodec.lib
 			${FFMPEG_LIBRARIES_PATH}/swscale.lib
