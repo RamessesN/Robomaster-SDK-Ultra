@@ -59,6 +59,13 @@ Rewrite the **robomaster** library to make it compatible with the later version 
 
 ---
 
+### TODO:
+
+1. Port into `Windows` system (Crazy Difficult)
+2. ...
+
+---
+
 #### ⚠️ License: The project isn't open source. See details [LICENSE](./LICENSE).
 
 ---
