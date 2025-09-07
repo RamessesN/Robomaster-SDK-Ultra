@@ -1,8 +1,9 @@
 # Robomaster-SDK-Ultra
 
 ![docs](https://img.shields.io/badge/docs-passing-brightgreen)
-![docs](https://img.shields.io/badge/docs-stable-blue)
-![latest version](https://img.shields.io/badge/latest%20version-v1.2.0-darkblue) \
+![docs](https://img.shields.io/badge/docs-stable-brightgreen)
+![latest version](https://img.shields.io/badge/latest%20version-v1.2.0-darkblue)
+![compatible sys](https://img.shields.io/badge/compatible%20sys-macOS%20|%20Linux-yellow) \
 ![python](https://img.shields.io/badge/python-3.8%20|%203.9%20|%203.10%20|%203.11%20|%203.12%20|%203.13-blue)
 
 ---
