@@ -2,7 +2,7 @@
 #include <pybind11/pybind11.h>
 
 namespace py = pybind11;
-PYBIND11_MODULE(libmedia_codec, m) {
+PYBIND11_MODULE(libmedia_codec_ultra, m) {
     m.doc()="RoboMaster Media Codec library for H264 and Opus stream using pybind11";
 #ifdef VERSION_INFO
     m.attr("__version__") = VERSION_INFO;

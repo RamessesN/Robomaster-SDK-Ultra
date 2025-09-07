@@ -37,8 +37,8 @@ if __name__ == '__main__':
 
     version_print(ep_robot)
     led_config(ep_robot)
-    move_config(ep_robot)
+    # move_config(ep_robot)
 
-    time.sleep(3)
+    # time.sleep(3)
 
     ep_robot.close()
