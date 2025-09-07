@@ -13,7 +13,7 @@ Rewrite the **robomaster** library to make it compatible with the later version 
 ---
 
 ### Notice:
-- It includes `libmedia_codec` for media decoding / encoding support (H264 / Opus).
+- It includes `libmedia_codec_ultra` for media decoding / encoding support (H264 / Opus).
 - Python Compatibility: `3.7` ~ `3.13`
 
 ---
@@ -63,4 +63,4 @@ Rewrite the **robomaster** library to make it compatible with the later version 
 ---
 
 #### @ author: [RamessesN](https://github.com/RamessesN)
-#### @ date: 2025-09-06
+#### @ date: 2025-09-07
