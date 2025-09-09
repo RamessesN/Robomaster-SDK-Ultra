@@ -52,7 +52,6 @@ extern "C" {
 using ubyte = unsigned char;
 namespace py = pybind11;
 
-
 class CodecException : public std::runtime_error {
 public:
     CodecException(const char* s) : std::runtime_error(s) {}
@@ -128,7 +127,6 @@ public:
     }
 };
 
-
 class FormatConverter {
 private:
     SwsContext *context_;
@@ -186,7 +184,6 @@ int row_size(const AVFrame& f) {
     return f.linesize[0];
 }
 
-
 class PyH264Decoder {
 public:
     std::unique_ptr<H264Decoder> decoder;
@@ -202,7 +199,8 @@ public:
             Py_ssize_t out_size = converter->predict_size(w,h);
 
             py::gil_scoped_acquire decode_acquire;
-            py::object py_out_str = py::reinterpret_steal<py::object>(PYBIND11_BYTES_FROM_STRING_AND_SIZE(NULL, out_size));
+            py::object py_out_str = py::reinterpret_steal<py::object>(
+                PYBIND11_BYTES_FROM_STRING_AND_SIZE(NULL, out_size));
             char* out_buffer = PYBIND11_BYTES_AS_STRING(py_out_str.ptr());
 
             py::gil_scoped_release convert_release;
@@ -236,7 +234,8 @@ public:
 
     ~PyH264Decoder() = default;
 
-    py::list decode(const py::str &input) {
+    // -------- 修正点：参数类型从 py::str 改为 py::bytes --------
+    py::list decode(const py::bytes &input) {
         ssize_t len = PYBIND11_BYTES_SIZE(input.ptr());
         const ubyte* data_in = (const ubyte*)(PYBIND11_BYTES_AS_STRING(input.ptr()));
 
@@ -264,7 +263,6 @@ public:
     }
 };
 
-
 class PyOpusDecoder {
 public:
     PyOpusDecoder(int frame_size, int sample_rate, int channels):
@@ -282,7 +280,8 @@ public:
         delete [] int16_raw_;
     }
 
-    py::bytes decode(const py::str & input) {
+    // -------- 修正点：参数类型从 py::str 改为 py::bytes --------
+    py::bytes decode(const py::bytes &input) {
         ssize_t len = PYBIND11_BYTES_SIZE(input.ptr());
         const unsigned char* data_in = (const unsigned char*)(PYBIND11_BYTES_AS_STRING(input.ptr()));
         try {
