@@ -334,16 +334,16 @@ class ActionDispatcher(object):
         """ 发送任务动作命令 """
         action._action_id = action._get_next_action_id()
 
-        if self.has_in_progress_actions:
-            self._in_progress_mutex.acquire()
-            for k in self._in_progress:
-                act = self._in_progress[k]
-                if action.target == act.target:
-                    action = list(self._in_progress.values())[0]
-                    logger.error("Robot is already performing {0} action(s) {1}".format(len(self._in_progress), action))
-                    raise Exception("Robot is already performing {0} action(s) {1}".format(
-                        len(self._in_progress), action))
-            self._in_progress_mutex.release()
+        # if self.has_in_progress_actions:
+        #     self._in_progress_mutex.acquire()
+        #     for k in self._in_progress:
+        #         act = self._in_progress[k]
+        #         if action.target == act.target:
+        #             action = list(self._in_progress.values())[0]
+        #             logger.error("Robot is already performing {0} action(s) {1}".format(len(self._in_progress), action))
+        #             raise Exception("Robot is already performing {0} action(s) {1}".format(
+        #                 len(self._in_progress), action))
+        #     self._in_progress_mutex.release()
         if action.is_running:
             raise Exception("Action is already running")
 
